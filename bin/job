@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+/**
+ * 在命令行下模拟请求, 运行和Web请求一样的流程, 从而可以用来在命令行下运行我们的Yaf应用,
+ * 对于这种方式, 唯一的关键点就是请求体, 默认的请求是由yaf_application实例化, 并且交给yaf_dispatcher的,
+ * 而在命令行模式下, Yaf_Application并不能正确的实例化一个命令行请求, 所以需要变更一下, 请求需要手动实例化.
+ */
+ini_set("display_errors", 1);
+ini_set('memory_limit', '512M');
+
+if(php_sapi_name() !== 'cli'){
+    trigger_error('this run not cli', E_USER_ERROR);
+}
+
+require dirname(__DIR__) . '/conf/Init.php';
+$app = new \Yaf\Application(APP_CONF. '/job.ini');
+$app->bootstrap();
+
+//设置执行的控制器及参数
+$request = new \Yaf\Request\Simple("CLI", "Index", $argv[1], $argv[2], array_slice($argv, 3));
+$app->getDispatcher()->dispatch($request);
