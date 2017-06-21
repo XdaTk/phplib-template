@@ -12,5 +12,5 @@
  * performing the request.
  */
 return array(
-    'demo_fail_check_error' => array('retcode' => 5001001, 'msg' => '校验失败', 'user_msg' => '业务校验失败, 请重试!'),
+    'demo_fail_check_error' => array('retcode' => 5001001, 'msg' => '校验失败'),
 );

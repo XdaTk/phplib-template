@@ -16,6 +16,13 @@ require dirname(__DIR__) . '/conf/Init.php';
 $app = new \Yaf\Application(APP_CONF. '/job.ini');
 $app->bootstrap();
 
+$raw_params = array_slice($argv, 3);
+$params = array();
+foreach ($raw_params as $param_str) {
+    list($key, $val) = explode('=', $param_str);
+    $params[$key] = $val;
+}
+
 //设置执行的控制器及参数
-$request = new \Yaf\Request\Simple("CLI", "Index", $argv[1], $argv[2], array_slice($argv, 3));
+$request = new \Yaf\Request\Simple("CLI", "Index", $argv[1], $argv[2], $params);
 $app->getDispatcher()->dispatch($request);

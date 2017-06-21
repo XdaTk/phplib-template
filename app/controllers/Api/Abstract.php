@@ -6,6 +6,6 @@
  */
 abstract class Controller_Api_Abstract extends \Base\Controller\Common {
 
-    protected $responseFormatter = \S\Response::FORMAT_JSON;
+    protected $response_formatter = \S\Response::FORMAT_JSON;
 
 }

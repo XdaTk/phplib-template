@@ -13,7 +13,7 @@ fi
 if [ "start" = "$1" ]
 then
     #启动daemon
-    nohup /usr/bin/php /data1/htdocs/$app_name/public/job.php Jobs_Daemon_Master >> /tmp/nohup.$app_name.Daemon.log 2>&1 &
+    nohup /data1/htdocs/$app_name/bin/job.php Jobs_Daemon_Master >> /tmp/nohup.$app_name.Daemon.log 2>&1 &
     #启动PHP
     /usr/local/php/sbin/php-fpm
 
@@ -42,7 +42,7 @@ fi
 if [ "reload" = "$1" ]
 then
     #重启daemon
-    nohup /usr/bin/php /data1/htdocs/$app_name/public/job.php Jobs_Daemon_Master >> /tmp/nohup.$app_name.Daemon.log 2>&1 &
+    nohup /data1/htdocs/$app_name/bin/job.php Jobs_Daemon_Master >> /tmp/nohup.$app_name.Daemon.log 2>&1 &
     #重启phpfpm
     kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 

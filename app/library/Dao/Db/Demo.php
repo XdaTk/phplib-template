@@ -27,7 +27,7 @@ class Demo extends \Dao\Db {
      * @return array
      */
     public function get($id) {
-        return self::db()->queryone($this->table, array('id'=>$id));
+        return self::db()->queryOne($this->table, array('id'=>$id));
     }
 
     /**

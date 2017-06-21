@@ -2,32 +2,36 @@
 
 /**
  * Class DemoTest
+ *
  * @description 测试用例示范
  * @doc https://phpunit.de/manual/current/zh_cn/index.html
  */
 class DemoTest extends \Base\Test\TestCase {
-    public function setUp(){
+
+    public function setUp() {
         parent::setUp();
     }
+
     /**
      * @test
      * @dataProvider additionProvider
      */
-    public function testAction($name){
-        $params = array(
-            'id' => 1,
+    public function testAction($id, $name) {
+        $params   = array(
+            'id'   => $id,
             'name' => $name,
         );
-        $response = $this->execRequest('GET', 'api_demo', $params);
+        $response = $this->execRequest(\S\Http::METHOD_GET, 'api_demo', $params);
 
-        $expect = 'marc';
+        $expect = $name;
 
         $this->assertEquals($expect, $response['data']);
     }
 
-    public function additionProvider(){
+    public function additionProvider() {
         return array(
-            array('marc')
+            array(3, 'xin'),
         );
     }
+
 }

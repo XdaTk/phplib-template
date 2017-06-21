@@ -1,6 +1,7 @@
 <?php
+
 /**
- * 在此做错误和异常统一处理
+ * Class Controller_Index
  */
 class Controller_Index extends Controller_Abstract {
     public function params(){

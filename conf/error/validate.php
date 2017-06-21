@@ -10,5 +10,5 @@
  * client seems to have erred.
  */
 return array(
-    'demo' => array('retcode'  => 4000000, 'msg'   => '参数错误'),
+    'demo' => array('retcode' => 4000000, 'msg' => '参数错误'),
 );

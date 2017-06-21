@@ -22,5 +22,5 @@
  */
 return array(
     'succ' => array('retcode'  => 2000000, 'msg'   => '成功'),
-    'sys_error' => array('retcode' => 5000000, 'msg' => '系统繁忙', 'user_msg' => '系统繁忙'),
+    'sys_error' => array('retcode' => 5000000, 'msg' => '系统繁忙'),
 );
