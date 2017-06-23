@@ -31,3 +31,5 @@ if(\Core\Env::isProductEnv()){
     define('APP_INTER_HOST_URL',  'http://'.APP_INTER_DOMAIN);
     define('APP_STATIC_PATH',   '/static');
 }
+
+define('APP_DEFAULT_ERROR_VIEW', PHPLIB.'/Base/Views/Error.phtml');//自定义错误展示页
