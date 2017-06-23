@@ -17,7 +17,7 @@ Code Generator Version 3.0.0
 
 2. 执行命令示例
    /usr/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名      模块列表(多个模块用英文逗号分割)
-   /usr/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com admin,wechat
+   /usr/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com Admin,wechat
    
 3. 生成的项目代码目录位置 - /data1/htdocs/{项目名称}
 
@@ -36,7 +36,7 @@ if (empty($argv[3])) {
     $modules = explode(',', $argv[3]);
 }
 define('TEMPLATE_DIR', dirname(__FILE__));
-define('DEFAULT_MODULES', array('admin', 'wechat'));
+define('DEFAULT_MODULES', array('Admin', 'wechat'));
 
 if (file_exists($app_path)) {
     rename($app_path, $app_path . "." . date('YmdHis', time()));

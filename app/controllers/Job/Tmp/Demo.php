@@ -6,11 +6,11 @@
  * @description 临时脚本示范
  *
  *              备注:
- *              1. 执行命令示范: /data1/htdocs/demo/bin/job.php Index Jobs_Tmp_Demo name=xin mobile=18512341234
+ *              1. 执行命令示范: /data1/htdocs/demo/bin/job.php -m Index -c Job_Tmp_Demo name=xin mobile=18512341234
  *              2. 注意内存分配情况;
  *              3. 关键信息添加日志记录或输出, 以追踪脚本执行情况;
  */
-class Controller_Jobs_Tmp_Demo extends \Base\Controller\Job {
+class Controller_Job_Tmp_Demo extends \Base\Controller\Job {
 
     protected function doSthAction() {
         $name   = $this->getParams('name');

@@ -126,7 +126,7 @@ create table if not exists admin_sysconfig_ip (
 ) engine=innodb default charset=utf8mb4 comment 'IP白名单表';
 
 insert into `admin_user_info` (`uid`, `uname`, `nick`, `password`, `salt`, `phone`, `description`, `isadmin`, `status`) values
-  (1, 'admin', '管理员', 'e788155ae2ad3c9016fece4f7218f324a4158246', '54cae36200d2b', '', '', 1, 0);
+  (1, 'Admin', '管理员', 'e788155ae2ad3c9016fece4f7218f324a4158246', '54cae36200d2b', '', '', 1, 0);
 
 insert into `admin_menu_main` (`mid`, `mname`, `description`, `order`) values
   (1, '系统管理', '系统管理', 101),
