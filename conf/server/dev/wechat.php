@@ -6,10 +6,10 @@
  */
 return array(
     'demo' => array(
-        'appid'            => 'wxf8548afb63076dce',
-        'appsecret'        => '88699969a0381d3b0d5aaf15cb729f19',
-        'token'            => 'demo_token',
-        'encoding_aes_key' => 'WJl3gf4iTGv2NILRtETI5NCcsBmEl6lMUXdjiYQBi5u',
+        'appid'            => '',
+        'appsecret'        => '',
+        'token'            => '',
+        'encoding_aes_key' => '',
 
         // 微信支付使用
         'mch_id'           => '',

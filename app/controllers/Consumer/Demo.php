@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class Controller_Jobs_Consumer_Demo
+ * Class Controller_Consumer_Demo
  */
-class Controller_Jobs_Consumer_Demo extends \Base\Controller\Consumer{
+class Controller_Consumer_Demo extends \Base\Controller\Consumer{
 
     protected function doSthAction() {
         $name   = $this->getParams('name');

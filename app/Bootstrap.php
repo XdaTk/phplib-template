@@ -1,3 +1,3 @@
 <?php
-class Bootstrap extends \Base\Bootstrap {
-}
+
+class Bootstrap extends \Base\Bootstrap {}

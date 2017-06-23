@@ -9,14 +9,21 @@ ini_set("display_errors", 1);
 ini_set('memory_limit', '512M');
 
 if(php_sapi_name() !== 'cli'){
-    trigger_error('this run not cli', E_USER_ERROR);
+    trigger_error('非cli模式不能运行', E_USER_ERROR);
+}
+if ($argc < 4) {
+    trigger_error('参数过少', E_USER_ERROR);
 }
 
+$module = $argv[1];
+$controller = $argv[2];
+$action = $argv[3];
+
 require dirname(__DIR__) . '/conf/Init.php';
-$app = new \Yaf\Application(APP_CONF. '/job.ini');
+$app = new \Yaf\Application(APP_CONF. '/' . ('Index' == $module ? 'application' : strtolower($module)) . '.ini');
 $app->bootstrap();
 
-$raw_params = array_slice($argv, 3);
+$raw_params = array_slice($argv, 4);
 $params = array();
 foreach ($raw_params as $param_str) {
     list($key, $val) = explode('=', $param_str);
@@ -24,5 +31,6 @@ foreach ($raw_params as $param_str) {
 }
 
 //设置执行的控制器及参数
-$request = new \Yaf\Request\Simple("CLI", "Index", $argv[1], $argv[2], $params);
+$request = new \Yaf\Request\Simple("CLI", $module, $controller, $action, $params);
+$app->getDispatcher()->catchException(false);
 $app->getDispatcher()->dispatch($request);

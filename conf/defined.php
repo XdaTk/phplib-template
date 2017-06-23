@@ -22,7 +22,6 @@ if(\Core\Env::isProductEnv()){
     define('APP_HOST_URL',  'https://'.APP_DOMAIN);  //公网服务根url
     define('APP_INTER_HOST_URL',  'http://'.APP_INTER_DOMAIN);  //内网服务根url
     define('APP_STATIC_PATH',   '/static');  //静态资源路径
-    define('APP_ADMIN_PATH',    '/admin'); //管理模块资源路径
 }else{
     // 开发环境APP相关定义
     define('APP_NAME',  '@appname@');
@@ -31,5 +30,4 @@ if(\Core\Env::isProductEnv()){
     define('APP_HOST_URL',  'http://'.APP_DOMAIN);
     define('APP_INTER_HOST_URL',  'http://'.APP_INTER_DOMAIN);
     define('APP_STATIC_PATH',   '/static');
-    define('APP_ADMIN_PATH',    '/admin');
 }
