@@ -16,7 +16,7 @@ phplib-template定义了一个项目的标准目录结构，同时提供了代�
 
 示范
 ```shell
-/usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php demo  demo.com Admin,wechat
+/usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php demo demo.com Admin,wechat
 ```
 说明
 

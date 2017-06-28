@@ -7,6 +7,6 @@
  *   更新jsapi_ticket
  *
  * 安装crontab示例：
- * 0 * * * * /data1/htdocs/@appname@/bin/job.php Wechat Config updateConfig 2>&1 >> /dev/nul
+ * 0 * * * * /data1/htdocs/@appname@/bin/job -m Wechat -c Config -a updateConfig 2>&1 >> /dev/nul
  */
 class Controller_Config extends \Modules\Wechat\Job\Config {}

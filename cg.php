@@ -67,6 +67,15 @@ foreach ($files as $file) {
     $index_files[] = $file;
 }
 
+//构建的时候不默认添加老的长进程master-worker模式入口文件
+$index_files = array_filter($index_files, function ($file) {
+    if (false !== strpos(strtolower($file), 'daemon')) {
+        return false;
+    }
+
+    return true;
+});
+
 //写入index模块文件
 foreach ($index_files as $file) {
     $app_file = str_replace(TEMPLATE_DIR, $app_path, $file);

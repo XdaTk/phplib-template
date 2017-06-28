@@ -13,12 +13,12 @@ if(php_sapi_name() !== 'cli'){
 }
 
 $optind = null;
-$opts = getopt('c:m::a::', [], $optind);
+$opts = getopt('c:m:a:', [], $optind);
 $pos_args = array_slice($argv, $optind);
 
-$module = $opts['m']?:'Index';
+$module = $opts['m'] ?: 'Index';
 $controller = $opts['c'];
-$action = $opts['a']?:'Index';
+$action = $opts['a'] ?: 'Index';
 $params = array();
 foreach ($pos_args as $param_str) {
     list($key, $val) = explode('=', $param_str);
