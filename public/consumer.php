@@ -9,5 +9,27 @@
  */
 header('Pragma: no-cache', false);
 require dirname(__DIR__) . '/conf/Init.php';
-$app  = new \Yaf\Application(APP_CONF. '/application.ini');
-$app->bootstrap()->run();
+
+$path_info = $_SERVER['PATH_INFO'];
+$path_arr = explode('/', trim($path_info, '/'));
+$module = array_shift($path_arr);
+if ('consumer' == strtolower($module)) {
+    $module = 'Index';
+}
+
+$action = array_pop($path_arr);
+$controller = implode('_', array_map(function ($item) {
+    return ucfirst($item);
+}, $path_arr));
+if ('Index' == $module) {
+    $controller = 'Consumer_' . $controller;
+}
+$params = (array)json_decode(substr($_SERVER['QUERY_STRING'], 5), true);
+
+$app  = new \Yaf\Application(APP_CONF. '/' . ('Index' == $module ? 'application' : $module) . '.ini');
+$app->bootstrap();
+
+//设置执行的控制器及参数
+$request = new \Yaf\Request\Simple("FASTCGI", $module, $controller, $action, $params);
+$app->getDispatcher()->catchException(false);
+$app->getDispatcher()->dispatch($request);
