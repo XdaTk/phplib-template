@@ -24,7 +24,7 @@ $controller = implode('_', array_map(function ($item) {
 if ('Index' == $module) {
     $controller = 'Consumer_' . $controller;
 }
-$params = (array)json_decode(substr($_SERVER['QUERY_STRING'], 5), true);
+$params = json_decode($_REQUEST['data'], true);
 
 $app  = new \Yaf\Application(APP_CONF. '/' . ('Index' == $module ? 'application' : strtolower($module)) . '.ini');
 $app->bootstrap();
