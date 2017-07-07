@@ -26,7 +26,7 @@ if ('Index' == $module) {
 }
 $params = (array)json_decode(substr($_SERVER['QUERY_STRING'], 5), true);
 
-$app  = new \Yaf\Application(APP_CONF. '/' . ('Index' == $module ? 'application' : $module) . '.ini');
+$app  = new \Yaf\Application(APP_CONF. '/' . ('Index' == $module ? 'application' : strtolower($module)) . '.ini');
 $app->bootstrap();
 
 //设置执行的控制器及参数
