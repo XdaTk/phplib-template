@@ -36,7 +36,7 @@ if (empty($argv[3])) {
     $modules = explode(',', $argv[3]);
 }
 define('TEMPLATE_DIR', dirname(__FILE__));
-define('DEFAULT_MODULES', array('Admin', 'wechat'));
+define('DEFAULT_MODULES', array('admin', 'wechat'));
 
 if (file_exists($app_path)) {
     rename($app_path, $app_path . "." . date('YmdHis', time()));
