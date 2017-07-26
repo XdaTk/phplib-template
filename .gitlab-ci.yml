@@ -1,0 +1,45 @@
+# 定义 stages
+stages:
+  - test
+  - push
+  - deploy
+  - cleanup
+variables:
+  # 项目唯一标识
+  PROJECT_INDEX: ${CI_PROJECT_NAME}${CI_COMMIT_SHA}
+  DEV_IMAGE_NAME: gitlab.yilumofang.com:4567/${CI_PROJECT_PATH}/image
+
+# 单元测试
+test_job:
+  stage: test
+  script:
+    - docker-compose -p ${PROJECT_INDEX} up php -d
+    - sleep 120
+    - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
+  only:
+    - master
+  tags:
+    - CI
+
+# 推送镜像到线下代码仓库
+push_image:
+  stage: push
+  script:
+    - docker build -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
+    - sh /data/gitlab/bin/push.sh ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} dev
+  only:
+    - master
+  tags:
+    - CI
+
+# 清理ci过程中产生的环境
+cleanup_job:
+  stage: cleanup
+  script:
+    - docker-compose -p ${PROJECT_INDEX} down
+    - docker rmi ${PROJECT_INDEX}_php
+  when: always
+  only:
+    - master
+  tags:
+    - CI
