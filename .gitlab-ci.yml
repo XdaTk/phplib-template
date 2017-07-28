@@ -27,7 +27,7 @@ publish_offline:
   script:
     - docker build --no-cache -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
     - sh /data/gitlab/bin/push.sh ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} dev
-    - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest .
+    - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest
     - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
   only:
     - master
@@ -40,10 +40,12 @@ publish_online:
   stage: publish
   script:
       - docker pull ${DEV_IMAGE_NAME}
-      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA} .
+      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
       - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA} product
-      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest .
+      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest
       - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
+  after_script:
+      - docker rmi ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
   environment:
     name: production
     when: manual
