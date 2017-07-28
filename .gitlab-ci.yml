@@ -1,7 +1,7 @@
 # 定义 stages
 stages:
   - test
-  - push
+  - publish
   - deploy
   - cleanup
 variables:
@@ -13,7 +13,7 @@ variables:
 test_job:
   stage: test
   script:
-    - docker-compose -p ${PROJECT_INDEX} up php -d
+    - docker-compose -p ${PROJECT_INDEX} up -d php
     - sleep 120
     - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
   only:
@@ -22,11 +22,43 @@ test_job:
     - CI
 
 # 推送镜像到线下代码仓库
-push_image:
-  stage: push
+publish_offline:
+  stage: publish
   script:
-    - docker build -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
+    - docker build --no-cache -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
     - sh /data/gitlab/bin/push.sh ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} dev
+    - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest .
+    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
+  only:
+    - master
+  tags:
+    - CI
+
+
+# 将镜像发布到生产仓库
+publish_online:
+  stage: publish
+  script:
+      - docker pull ${DEV_IMAGE_NAME}
+      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA} .
+      - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA} product
+      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest .
+      - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
+  environment:
+    name: production
+    when: manual
+  only:
+    - production
+  tags:
+    - CD
+
+# 更新测试环境的代码
+deploy_test:
+  stage: deploy
+  script:
+    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml stop php
+    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml rm -f php
+    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml up -d php
   only:
     - master
   tags:
@@ -38,6 +70,7 @@ cleanup_job:
   script:
     - docker-compose -p ${PROJECT_INDEX} down
     - docker rmi ${PROJECT_INDEX}_php
+    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
   when: always
   only:
     - master
