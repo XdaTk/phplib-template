@@ -48,7 +48,7 @@ publish_online:
       - docker rmi ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
   environment:
     name: production
-    when: manual
+  when: manual
   only:
     - production
   tags:
