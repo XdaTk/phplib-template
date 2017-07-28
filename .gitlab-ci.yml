@@ -28,12 +28,11 @@ publish_offline:
     - docker build --no-cache -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
     - sh /data/gitlab/bin/push.sh ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} dev
     - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest
-    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
+    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest dev
   only:
     - master
   tags:
     - CI
-
 
 # 将镜像发布到生产仓库
 publish_online:
