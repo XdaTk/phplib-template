@@ -13,8 +13,8 @@ Code Generator Version 3.0.0
 
 使用说明:
     执行命令示例:
-   /usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名      项目目标地址  模块列表(多个模块用英文逗号分割)
-   /usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com  /home/demo  Admin,wechat
+   /usr/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名      项目目标地址  模块列表(多个模块用英文逗号分割)
+   /usr/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com  /home/demo  Admin,wechat
 
 *******************************************************************************************
 \n
@@ -101,7 +101,7 @@ foreach ($modules as $module) {
 }
 
 // 处理nginx配置文件名称
-exec("mv $app_path/build/nginx/vhosts/template.conf /usr/local/openresty/nginx/conf/vhosts/$app_name.conf");
+exec("mv $app_path/build/nginx/vhosts/template.conf $app_path/build/nginx/vhosts/$app_name.conf");
 
 echo PHP_EOL . "项目生成完毕..." . PHP_EOL . PHP_EOL;
 echo PHP_EOL . "项目地址为$app_path" . PHP_EOL . PHP_EOL;
