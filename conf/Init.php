@@ -3,7 +3,7 @@
 define('APP_START_TIME', microtime(1));
 
 //路径定义
-define('PHPLIB', '/data1/htdocs/phplib-master');
+define('PHPLIB', '/data1/htdocs/phplib');
 define('ROOT_PATH', dirname(__DIR__));
 define('APP_PATH', ROOT_PATH . '/app');
 define('APP_CONF', ROOT_PATH . '/conf');
