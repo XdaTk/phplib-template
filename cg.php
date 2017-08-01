@@ -13,8 +13,8 @@ Code Generator Version 3.0.0
 
 使用说明:
     执行命令示例:
-   /usr/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名      项目目标地址  模块列表(多个模块用英文逗号分割)
-   /usr/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com  /home/demo  Admin,wechat
+   /usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名      项目目标地址  模块列表(多个模块用英文逗号分割)
+   /usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php demo    demo.com  /home/demo  Admin,wechat
 
 *******************************************************************************************
 \n
