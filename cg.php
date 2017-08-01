@@ -101,7 +101,7 @@ foreach ($modules as $module) {
 }
 
 // 处理nginx配置文件名称
-exec("mv $app_path/build/nginx/vhosts/template.conf $app_path/build/nginx/vhosts/$app_name.conf");
+exec("mv $app_path/build/nginx/vhosts/template.conf /usr/local/openresty/nginx/conf/vhosts/$app_name.conf");
 
 echo PHP_EOL . "项目生成完毕..." . PHP_EOL . PHP_EOL;
 echo PHP_EOL . "项目地址为$app_path" . PHP_EOL . PHP_EOL;
