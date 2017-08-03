@@ -12,11 +12,11 @@ phplib-template定义了一个项目的标准目录结构，同时提供了代�
 
 ## 使用
 
-/usr/bin/php /data1/htdocs/phplib-template/cg.php 项目名称 域名  模块列表(多个模块用英文逗号分割)
+php cg.php 项目名称 域名  模块列表(多个模块用英文逗号分割)
 
 示范
 ```shell
-/usr/local/php/bin/php /data1/htdocs/phplib-template/cg.php demo demo.com Admin,wechat
+php cg.php demo demo.com /data1/htdocs/demo.com admin,wechat
 ```
 说明
 
