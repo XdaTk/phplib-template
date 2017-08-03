@@ -7,9 +7,12 @@ stages:
 variables:
   # 项目唯一标识
   PROJECT_INDEX: ${CI_PROJECT_NAME}${CI_COMMIT_SHA}
-  DEV_REGISTRY_ADDRESS: gitlab.yilumofang.com:4567
-  DEV_IMAGE_NAME: gitlab.yilumofang.com:4567/${CI_PROJECT_PATH}/image
-  PRDUCTION_IMAGE_NAME: dockerhub.jrmf360.com/${CI_PROJECT_PATH}
+  # 线下镜像仓库地址
+  DEV_REGISTRY_ADDRESS: gitlab.nw.com
+  # 生产镜像仓库地址
+  PRO_REGISTRY_ADDRESS: dockerhub.nw.com
+  # 镜像仓库名称
+  REPOSITORY: ${CI_PROJECT_PATH}
 
 before_script:
   - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${DEV_REGISTRY_ADDRESS}
@@ -19,8 +22,12 @@ test_job:
   stage: test
   script:
     - docker-compose -p ${PROJECT_INDEX} up -d php
-#    - sleep 120
-#    - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
+    - sleep 120
+    - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
+  after_script:
+    # 销毁测试中生产的容器和镜像
+    - docker-compose -p ${PROJECT_INDEX} down
+    - docker rmi ${PROJECT_INDEX}_php
   only:
     - master
   tags:
@@ -30,8 +37,13 @@ test_job:
 publish_offline:
   stage: publish
   script:
-    - docker build -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
-    - docker push ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker build -t ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} .
+    - docker push ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    # 打上latest标签，以备构建稳定测试环境使用
+    - docker tag ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}
+  after_script:
+    # 清理镜像
+    - docker rmi ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
   only:
     - master
   tags:
@@ -41,14 +53,14 @@ publish_offline:
 publish_online:
   stage: publish
   script:
-    - docker pull ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
-    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
-    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
-    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${PRDUCTION_IMAGE_NAME}:latest
-    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest
+    - docker pull ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    - docker tag ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    - sh /data/gitlab/bin/push.sh ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    - docker tag ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}
+    - sh /data/gitlab/bin/push.sh ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}
   after_script:
-    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
-    - docker rmi ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker rmi ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    - docker rmi ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
   environment:
     name: production
   when: manual
@@ -61,13 +73,9 @@ publish_online:
 deploy_test:
   stage: deploy
   script:
-    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml stop php
-    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml rm -f php
-    - docker pull ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
-    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${DEV_IMAGE_NAME}:latest
-    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml up -d php
-  after_script:
-    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml stop php
+    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml rm -f php
+    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml up -d php
   only:
     - master
   tags:
@@ -77,8 +85,8 @@ deploy_test:
 cleanup_job:
   stage: cleanup
   script:
-    - docker-compose -p ${PROJECT_INDEX} down
-    - docker rmi ${PROJECT_INDEX}_php
+    # 对于稳定测试环境更新时会产生一些tag为none的镜像，此步骤是为了清理这些虚悬镜像
+    - docker images|grep none|awk '{print $3}'|xargs docker rmi -f
   when: always
   only:
     - master

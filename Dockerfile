@@ -9,6 +9,3 @@ ENV APP_NAME = @appname@
 
 ## copy项目代码
 COPY . /data1/htdocs/@appname@/
-
-## 去掉无用的文件
-RUN rm -rf /data1/htdocs/@appname@/.git
