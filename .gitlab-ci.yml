@@ -7,15 +7,20 @@ stages:
 variables:
   # 项目唯一标识
   PROJECT_INDEX: ${CI_PROJECT_NAME}${CI_COMMIT_SHA}
+  DEV_REGISTRY_ADDRESS: gitlab.yilumofang.com:4567
   DEV_IMAGE_NAME: gitlab.yilumofang.com:4567/${CI_PROJECT_PATH}/image
+  PRDUCTION_IMAGE_NAME: dockerhub.jrmf360.com/${CI_PROJECT_PATH}
+
+before_script:
+  - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${DEV_REGISTRY_ADDRESS}
 
 # 单元测试
 test_job:
   stage: test
   script:
     - docker-compose -p ${PROJECT_INDEX} up -d php
-    - sleep 120
-    - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
+#    - sleep 120
+#    - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
   only:
     - master
   tags:
@@ -25,10 +30,8 @@ test_job:
 publish_offline:
   stage: publish
   script:
-    - docker build --no-cache -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
-    - sh /data/gitlab/bin/push.sh ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} dev
-    - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest
-    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest dev
+    - docker build -t ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} .
+    - docker push ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
   only:
     - master
   tags:
@@ -38,18 +41,19 @@ publish_offline:
 publish_online:
   stage: publish
   script:
-      - docker pull ${DEV_IMAGE_NAME}
-      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
-      - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA} product
-      - docker tag ${DEV_IMAGE_NAME} ${PRDUCTION_IMAGE_NAME}:latest
-      - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest product
+    - docker pull ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${PRDUCTION_IMAGE_NAME}:latest
+    - sh /data/gitlab/bin/push.sh ${PRDUCTION_IMAGE_NAME}:latest
   after_script:
-      - docker rmi ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker rmi ${PRDUCTION_IMAGE_NAME}:${CI_COMMIT_SHA}
   environment:
     name: production
   when: manual
   only:
-    - production
+    - master
   tags:
     - CD
 
@@ -57,9 +61,13 @@ publish_online:
 deploy_test:
   stage: deploy
   script:
-    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml stop php
-    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml rm -f php
-    - docker-compose -f /data/test/${CI_PROJECT_NAME}/docker-compose.yml up -d php
+    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml stop php
+    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml rm -f php
+    - docker pull ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
+    - docker tag ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA} ${DEV_IMAGE_NAME}:latest
+    - docker-compose -f /data/test/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/docker-compose.yml up -d php
+  after_script:
+    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
   only:
     - master
   tags:
@@ -71,7 +79,6 @@ cleanup_job:
   script:
     - docker-compose -p ${PROJECT_INDEX} down
     - docker rmi ${PROJECT_INDEX}_php
-    - docker rmi ${DEV_IMAGE_NAME}:${CI_COMMIT_SHA}
   when: always
   only:
     - master
