@@ -12,13 +12,8 @@ phplib-template定义了一个项目的标准目录结构，同时提供了代�
 
 ## 使用
 
-php cg.php 项目名称 域名  模块列表(多个模块用英文逗号分割)
+php cg.php  项目名称 域名      项目目标地址  模块列表(多个模块用英文逗号分割)
 
-示范
-```shell
-php cg.php demo demo.com /data1/htdocs/demo.com admin,wechat
-```
-说明
+示范：php cg.php demo demo.com /home/demo.com admin,wechat
 
-1. 执行cg脚本需要root权限   
-2. 生成的项目代码目录位置 - /data1/htdocs/{项目名称}
+详细参考：[如何构建php本地开发环境](https://ifentech.gitbooks.io/rdbuild/content/jiao-fu/kai-fa/php.html)
