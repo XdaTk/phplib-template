@@ -1,7 +1,7 @@
 # 定义 stages
 stages:
   - test
-  - publish
+  - push
   - deploy
   - cleanup
 variables:
@@ -34,8 +34,8 @@ test_job:
     - CI
 
 # 推送镜像到线下代码仓库
-publish_offline:
-  stage: publish
+push_offline:
+  stage: push
   script:
     - docker build -t ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} .
     - docker push ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
@@ -50,8 +50,8 @@ publish_offline:
     - CI
 
 # 将镜像发布到生产仓库
-publish_online:
-  stage: publish
+push_online:
+  stage: push
   script:
     - docker pull ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
     - docker tag ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}

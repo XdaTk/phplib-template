@@ -16,4 +16,4 @@ php cg.php  项目名称 域名      项目目标地址  模块列表(多个模�
 
 示范：php cg.php demo demo.com /home/demo.com admin,wechat
 
-详细参考：[如何构建php本地开发环境](https://ifentech.gitbooks.io/rdbuild/content/jiao-fu/kai-fa/php.html)
+详细参考：[如何构建php本地开发环境](https://ifentech.gitbooks.io/rdbuild/content/dev/develop/php.html)
