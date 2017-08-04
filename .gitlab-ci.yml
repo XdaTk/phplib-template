@@ -17,7 +17,7 @@ variables:
 before_script:
   - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${DEV_REGISTRY_ADDRESS}
 
-# 单元测试
+# 集成测试
 test_job:
   stage: test
   script:

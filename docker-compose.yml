@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./build/nginx/vhosts/${PROJECT_NAME}.conf:/etc/nginx/conf.d/${PROJECT_NAME}.conf
+      - ./build/nginx/vhosts/@appname@.conf:/etc/nginx/conf.d/@appname@.conf
       - ./build/nginx/fastcgi_params:/etc/nginx/fastcgi_params
     links:
       - php
@@ -14,7 +14,7 @@ services:
     build: .
     command: php-fpm
     volumes:
-      - .:/data1/htdocs/${PROJECT_NAME}
+      - .:/data1/htdocs/@appname@
     links:
       - mysql
       - redis
@@ -26,8 +26,8 @@ services:
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${PROJECT_NAME}
+      MYSQL_ROOT_PASSWORD: @db_root_pwd@
+      MYSQL_DATABASE: @appname@
     volumes:
       - ./build/sql:/docker-entrypoint-initdb.d
 
