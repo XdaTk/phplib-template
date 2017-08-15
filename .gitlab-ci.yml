@@ -69,13 +69,11 @@ push_online:
   tags:
     - CD
 
-# 更新测试环境的代码
+# 更新稳定环境的代码
 deploy_test:
   stage: deploy
   script:
-    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml stop php
-    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml rm -f php
-    - docker-compose -f /data/test/${CI_PROJECT_PATH}/docker-compose.yml up -d php
+    - echo "skip deploy test"
   only:
     - master
   tags:
