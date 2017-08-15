@@ -140,7 +140,8 @@ insert into `admin_menu_sub` (mid, `uname`, `controller`, `action`, `order`) val
   (1, '系统配置',       'Controller_Sysconfig', 'indexAction',      5),
 
   (2, 'dataTable示例', 'Controller_Demo',     'dataTableIndexAction', 1),
-  (2, '图表示范',       'Controller_Demo',     'chartIndexAction',     2);
+  (2, '图表示范',       'Controller_Demo',     'chartIndexAction',     2),
+  (2, '表单示范',       'Controller_Demo',     'formIndexAction',     3);
 
 insert into `admin_user_groups` (`gid`, `gname`, `description`) values
   (1, '普通', '普通用户组, 权限包括: 登录、登出、编辑用户信息');

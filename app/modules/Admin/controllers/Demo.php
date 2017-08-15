@@ -24,4 +24,14 @@ class Controller_Demo extends \Modules\Admin\Controllers\Base {
     public function chartIndexAction() {
     }
 
+    /**
+     * @name 表单示范
+     */
+    public function formIndexAction() {
+        ;
+    }
+
+    public function dealFormAction() {
+    }
+
 }
