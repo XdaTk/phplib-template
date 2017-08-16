@@ -53,13 +53,16 @@ push_offline:
 push_online:
   stage: push
   script:
-    - docker pull ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
-    - docker tag ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
+    # 添加生产配置
+    - git archive --format=zip --remote=git@gitlab.nw.com:security/configure.git master -o /tmp/configure.zip
+    - unzip -o /tmp/configure.zip -d /tmp/configure/
+    - cp -r /tmp/configure/${CI_PROJECT_NAME}/* ./
+    # 重新构建镜像
+    - docker build -t ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} .
     - sh /data/gitlab/bin/push.sh ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
     - docker tag ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA} ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}
     - sh /data/gitlab/bin/push.sh ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}
   after_script:
-    - docker rmi ${DEV_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
     - docker rmi ${PRO_REGISTRY_ADDRESS}/${REPOSITORY}:${CI_COMMIT_SHA}
   environment:
     name: production
