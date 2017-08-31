@@ -1,25 +1,24 @@
 version: "3"
 services:
   nginx:
-    image: nginx
+    image: ifintech/nginx-php
     ports:
       - "80:80"
-    volumes:
-      - ./build/nginx/vhosts/@appname@.conf:/etc/nginx/conf.d/@appname@.conf
-      - ./build/nginx/fastcgi_params:/etc/nginx/fastcgi_params
+    environment:
+      APP_NAME: @appname@
     links:
-      - php
+      - @appname@_php
 
-  php:
+  @appname@_php:
     build: .
     command: php-fpm
     volumes:
       - .:/data1/htdocs/@appname@
     links:
-      - mysql
-      - redis
+      - @appname@_mysql
+      - @appname@_redis
 
-  mysql:
+  @appname@_mysql:
     image: mysql:5.7
     command:
       - --character-set-server=utf8mb4
@@ -31,5 +30,5 @@ services:
     volumes:
       - ./build/sql:/docker-entrypoint-initdb.d
 
-  redis:
+  @appname@_redis:
     image: redis:alpine

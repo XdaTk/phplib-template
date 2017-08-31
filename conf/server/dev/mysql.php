@@ -4,7 +4,7 @@ return array(
         'master' => array(
             'username'  => '@db_root_name@',
             'password'  => '@db_root_pwd@',
-            'host'      => 'mysql',
+            'host'      => '@appname@_mysql',
             'port'      => '3306',
             'dbname'    => '@appname@',
             'pconnect'  => false,
@@ -14,7 +14,7 @@ return array(
         'slave' => array(
             'username'  => '@db_root_name@',
             'password'  => '@db_root_pwd@',
-            'host'      => 'mysql',
+            'host'      => '@appname@_mysql',
             'port'      => '3306',
             'dbname'    => '@appname@',
             'pconnect'  => false,
@@ -24,7 +24,7 @@ return array(
         'backup' => array(
             'username'  => '@db_root_name@',
             'password'  => '@db_root_pwd@',
-            'host'      => 'mysql',
+            'host'      => '@appname@_mysql',
             'port'      => '3306',
             'dbname'    => '@appname@',
             'pconnect'  => false,

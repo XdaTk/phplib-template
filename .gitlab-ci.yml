@@ -21,13 +21,13 @@ before_script:
 test_job:
   stage: test
   script:
-    - docker-compose -p ${PROJECT_INDEX} up -d php
+    - docker-compose -p ${PROJECT_INDEX} up -d ${CI_PROJECT_NAME}_php
     - sleep 120
     - docker-compose -p ${PROJECT_INDEX} run --rm -w /data1/htdocs/${CI_PROJECT_NAME}/test/ php phpunit
   after_script:
     # 销毁测试中生产的容器和镜像
     - docker-compose -p ${PROJECT_INDEX} down
-    - docker rmi ${PROJECT_INDEX}_php
+    - docker rmi ${PROJECT_INDEX}_${CI_PROJECT_NAME}_php
   only:
     - master
   tags:
@@ -76,7 +76,7 @@ push_online:
 deploy_test:
   stage: deploy
   script:
-    - echo "skip deploy test"
+    - docker service update ${CI_PROJECT_NAME}_php --with-registry-auth
   only:
     - master
   tags:
